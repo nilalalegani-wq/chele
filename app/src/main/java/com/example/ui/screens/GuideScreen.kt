@@ -13,7 +13,10 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -253,6 +256,92 @@ fun GuideScreen(onBackClick: () -> Unit) {
                         desc = "باید به صورت مداوم و ۴۰ روز متوالی خوانده شود. خانم‌ها در ایامی که عذر شرعی دارند باید نایب بگیرند تا چله قطع نشود."
                     )
                 }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // FAQ Section
+            Text(
+                text = "سوالات متداول (FAQ)",
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            FaqItem(
+                question = "آیا نماز هدیه و نماز زیارت باید حتما خوانده شوند؟",
+                answer = "بله، هر دو نماز دو رکعتی (یکی هدیه به امام حسین (ع) در ابتدای اعمال، و دیگری نماز خود زیارت عاشورا در انتهای اعمال) جزء لاینفک و واجب این چله به توصیه آیت‌الله حق‌شناس هستند."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            FaqItem(
+                question = "زمان دقیق خواندن اعمال چه ساعتی است؟",
+                answer = "زمان مناسب برای قرائت اعمال از طلوع آفتاب تا غروب آفتاب است. بهتر است در ساعت معینی انجام شود تا نظم حفظ گردد. خواندن اعمال در شب مجاز نیست."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            FaqItem(
+                question = "اگر در حین اعمال با کسی صحبت کنیم چله باطل می‌شود؟",
+                answer = "آیت‌الله حق‌شناس بر سکوت و عدم تکلم با دیگران در حین چله بسیار تاکید داشتند. صبحت نکردن، حضور قلب را افزایش می‌دهد و از شروط کمال چله است."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            FaqItem(
+                question = "خانم‌ها در ایام عذر شرعی چگونه چله را ادامه دهند؟",
+                answer = "برای اینکه چله قطع نشود و ۴۰ روز متوالی حفظ گردد، خانم‌ها در این ایام باید یک نایب متدین و امین انتخاب کنند تا اعمال را به جای آن‌ها انجام دهد."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            FaqItem(
+                question = "آیا صدقه دادن هر روزه الزامی است؟",
+                answer = "بله، پرداخت صدقه روزانه برای دفع بلا و موفقیت در اتمام چله بسیار توصیه شده است. در برنامه یادآوری ساعت ۱۰ صبح برای همین منظور طراحی شده است."
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
+
+@Composable
+fun FaqItem(question: String, answer: String) {
+    var isExpanded by remember { mutableStateOf(false) }
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { isExpanded = !isExpanded },
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.15f))
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = question,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = if (isExpanded) "بستن" else "باز کردن",
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            }
+            if (isExpanded) {
+                Spacer(modifier = Modifier.height(8.dp))
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f))
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = answer,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                    lineHeight = 18.sp,
+                    textAlign = TextAlign.Justify
+                )
             }
         }
     }

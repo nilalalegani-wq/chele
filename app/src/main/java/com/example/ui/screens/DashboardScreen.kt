@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -47,10 +48,8 @@ fun DashboardScreen(
     days: List<ChelehDay>,
     onDayClick: (Int) -> Unit,
     onGuideClick: () -> Unit,
-    onResetClick: () -> Unit
+    onSettingsClick: () -> Unit
 ) {
-    var showResetDialog by remember { mutableStateOf(false) }
-    
     // Calculate stats
     val completedDays = days.count { it.isCompleted }
     val progressPercent = if (days.isNotEmpty()) (completedDays.toFloat() / days.size) else 0f
@@ -100,12 +99,12 @@ fun DashboardScreen(
                         )
                     }
                     IconButton(
-                        onClick = { showResetDialog = true },
-                        modifier = Modifier.testTag("reset_button")
+                        onClick = onSettingsClick,
+                        modifier = Modifier.testTag("settings_button")
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "ریست کردن پیشرفت",
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "تنظیمات برنامه",
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -365,30 +364,5 @@ fun DashboardScreen(
                 }
             }
         }
-    }
-
-    // Reset Confirmation Dialog
-    if (showResetDialog) {
-        AlertDialog(
-            onDismissRequest = { showResetDialog = false },
-            title = { Text("شروع مجدد چله؟") },
-            text = { Text("آیا مطمئن هستید که می‌خواهید تمام اطلاعات پیشرفت و شمارنده‌های ۴۰ روز چله را صفر کنید؟ این عمل غیر قابل بازگشت است.") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onResetClick()
-                        showResetDialog = false
-                    },
-                    colors = ButtonDefaults.textButtonColors(contentColor = SpiritualCrimson)
-                ) {
-                    Text("بله، ریست شود", fontWeight = FontWeight.Bold)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showResetDialog = false }) {
-                    Text("انصراف")
-                }
-            }
-        )
     }
 }

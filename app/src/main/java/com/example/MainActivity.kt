@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import com.example.ui.screens.DashboardScreen
 import com.example.ui.screens.GuideScreen
 import com.example.ui.screens.RecitationScreen
+import com.example.ui.screens.SettingsScreen
 import com.example.ui.theme.MyApplicationTheme
 import com.example.ui.viewmodel.ChelehViewModel
 import com.example.ui.viewmodel.ChelehViewModelFactory
@@ -27,13 +28,16 @@ class MainActivity : ComponentActivity() {
         
         val app = application as ChelehApplication
         val repository = app.repository
+        val settingsManager = app.settingsManager
 
         setContent {
-            MyApplicationTheme {
-                val viewModel: ChelehViewModel = viewModel(
-                    factory = ChelehViewModelFactory(repository)
-                )
-                
+            val viewModel: ChelehViewModel = viewModel(
+                factory = ChelehViewModelFactory(repository, settingsManager)
+            )
+            val themeMode by viewModel.themeMode.collectAsState()
+            val colorTheme by viewModel.colorTheme.collectAsState()
+
+            MyApplicationTheme(themeMode = themeMode, colorTheme = colorTheme) {
                 val navController = rememberNavController()
                 val days by viewModel.allDays.collectAsState()
 
@@ -51,8 +55,17 @@ class MainActivity : ComponentActivity() {
                             onGuideClick = {
                                 navController.navigate("guide")
                             },
-                            onResetClick = {
-                                viewModel.resetAllProgress()
+                            onSettingsClick = {
+                                navController.navigate("settings")
+                            }
+                        )
+                    }
+
+                    composable("settings") {
+                        SettingsScreen(
+                            viewModel = viewModel,
+                            onBackClick = {
+                                navController.popBackStack()
                             }
                         )
                     }
@@ -71,6 +84,7 @@ class MainActivity : ComponentActivity() {
                     ) { backStackEntry ->
                         val dayNumber = backStackEntry.arguments?.getInt("dayNumber") ?: 1
                         val activeDay by viewModel.activeDay.collectAsState()
+                        val vibrationEnabled by viewModel.vibrationEnabled.collectAsState()
                         
                         LaunchedEffect(dayNumber) {
                             viewModel.selectDay(dayNumber)
@@ -79,6 +93,7 @@ class MainActivity : ComponentActivity() {
                         activeDay?.let { day ->
                             RecitationScreen(
                                 day = day,
+                                vibrationEnabled = vibrationEnabled,
                                 onBackClick = {
                                     viewModel.clearSelectedDay()
                                     navController.popBackStack()
