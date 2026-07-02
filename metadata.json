@@ -1,0 +1,6 @@
+{
+  "name": "چله زیارت عاشورا",
+  "description": "برنامه راهنما و مدیریت چله زیارت عاشورا به روش خاص آیت‌الله حق‌شناس همراه با شمارنده گام‌به‌گام و ذخیره‌سازی پیشرفت",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
